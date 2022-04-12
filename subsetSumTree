@@ -1,0 +1,94 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+using ll = long long;
+using vi = vector<int>;
+using vvi = vector<vector<int>>;
+using vl = vector<ll>;
+using vvl = vector<vector<ll>>;
+using pi = pair<int, int>;
+using pl = pair<ll, ll>;
+
+
+#define all(x) begin(x), end(x)
+#define rall(x) rbegin(x), rend(x)
+#define PB push_back
+#define MP make_pair
+#define F first
+#define S second
+#define endl '\n'
+#define forn(i, n) for(ll i = 0; i < n; i++)
+#define fora(i, a, n) for(ll i = a; i < n; i++)
+#define readi(e) int e; cin >> e
+#define readl(e) ll e; cin >> e
+#define reads(e) string e; cin >> e
+#define T int tt; cin >> tt; while(tt--)
+
+
+template<typename U>
+void print(U arr) {
+	for(auto element: arr) {
+		cout << element << " ";
+	}
+	cout << endl;
+}
+
+// read and write into files, rather than standard i/o
+void setup(string s) {
+	freopen((s+".in").c_str(), "r", stdin);
+	freopen((s+".out").c_str(), "w", stdout);
+}
+
+const int M = 1e9+7;
+
+ll pairs(ll n){
+    return n*(n-1)/2;
+}
+
+void dfs(int i,int parent,vector<int>& subtree,vector<int> adj[]){
+    subtree[i] += i;
+    for(auto it:adj[i]){
+        if(it!= parent){
+            dfs(it,i,subtree,adj);
+            subtree[i] += subtree[it];
+        }
+    }
+}
+
+void bfs(int source,vector<int> adj[],vector<int>& visited,vector<int>& res){
+    queue<int> q;
+    q.push(source);
+    for(int i = 1;i<visited.size();i++){
+        if(!visited[i]){
+            while(!q.empty()){
+                int node = q.front();
+                q.pop();
+                res.push_back(node);
+                visited[node] = 1;
+                for(auto it:adj[node]){
+                    if(!visited[it]) {q.push(it);visited[it] = 1;}
+                }
+            }
+        }
+    }
+}
+
+int main()
+{
+    int m;
+    cin>>m;
+    vector<int> adj[m+1];
+    for(int i = 1;i<= m-1;i++){
+        int x,y;
+        cin>>x>>y;
+        adj[x].push_back(y);
+        adj[y].push_back(x);
+    }
+   vector<int> subtree(m+1);
+    dfs(1,-1,subtree,adj);
+    for(int i = 1;i<=m-1;i++){
+        cout<<i<<" "<<subtree[i]<<endl;
+    }
+    return 0;
+}
